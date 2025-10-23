@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>PEDIDO CORDINACION</title>
+    <title>FERIA DE RUIZ PINEDA</title>
     <!-- Incluir Tailwind CSS desde CDN para un diseño moderno y adaptable -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Configuración para habilitar el modo oscuro de Tailwind -->
@@ -350,7 +350,7 @@
     <div id="mainContainer" class="w-full max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 md:p-8 relative">
         <!-- Título principal actualizado -->
         <h1 class="text-3xl md:text-4xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">
-            PEDIDO DE<br>FERIA DE RUIZ PINEDA
+            PEDIDO DE<br>FERIA RUIZ PINEDA
         </h1>
         <!-- Botón de opciones (tres puntos) -->
         <button id="optionsBtn" class="absolute top-4 left-4 text-purple-500 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 transition-colors z-20 p-1 rounded-lg">
@@ -766,7 +766,7 @@
             { id: 190, name: 'MARGARINA MIRASOL 454 GR "46cajas"' },
             { id: 191, name: 'MARGARINA NELLY 500GR "30cajas".' },
             { id: 192, name: 'MARGARINA RENDIDORA 400 GR "32cajas"' },
-            { id: 193, name: 'MARGARina VEMESA 400 GR "40cajas"' },
+            { id: 193, name: 'MARGARINA VEMESA 400 GR "40cajas"' },
             { id: 194, name: 'MAYONESA ESPECIAL 445 GR "20cajas"' },
             { id: 195, name: 'MAYONESA KEMY "55cajas"' },
             { id: 196, name: 'MAYONESA KRAFT 175 GR "10cajas"' },
@@ -925,7 +925,12 @@
             // Extraer la unidad de medida del nombre del producto
             const match = product.name.match(/"(.*?)"|""/);
             const unit = match ? match[1].replace(/\d+/g, '').replace(/[.¿?¿¡]/g, '').trim().split(' ')[0] : '';
-            return { ...product, unit };
+            
+            // --- NUEVA LÍNEA ---
+            // Crear un nombre limpio sin las comillas, su contenido, y puntos al final
+            const cleanName = product.name.replace(/"[^"]*"/g, '').trim().replace(/\.$/, '').trim();
+
+            return { ...product, unit, cleanName }; // Añadir cleanName al objeto
         });
 
         // Mapeo de empresas a NOMBRES de productos para el modo "Pedido Directo"
@@ -1101,8 +1106,8 @@
                 const isSelected = selectedProducts.some(p => p.id === item.id);
                 const cardClass = isSelected ? 'product-card selected' : 'product-card';
                 return `
-                    <div class="${cardClass} flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm" data-id="${item.id}" data-name="${item.name}">
-                        <h2 class="product-name text-sm sm:text-lg font-medium text-gray-800">${item.id}. ${item.name}</h2>
+                    <div class="${cardClass} flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm" data-id="${item.id}" data-name="${item.cleanName}">
+                        <h2 class="product-name text-sm sm:text-lg font-medium text-gray-800">${item.id}. ${item.cleanName}</h2>
                     </div>
                 `;
             }).join('');
@@ -1131,7 +1136,7 @@
                 const selectedHtml = sortedProducts.map(product => {
                     return `
                         <div class="bg-blue-50 dark:bg-slate-700 p-4 rounded-lg shadow-md flex justify-between items-center transition-all duration-200 border-2 border-blue-400 dark:border-blue-700">
-                            <span class="font-medium text-blue-800 dark:text-blue-200">${product.name}</span>
+                            <span class="font-medium text-blue-800 dark:text-blue-200">${product.cleanName}</span>
                             <div class="flex items-center gap-4">
                                 <span class="font-bold text-blue-900 dark:text-blue-100">${product.quantity} ${product.unit}</span>
                                 <button class="delete-button" data-id="${product.id}">Eliminar</button>
@@ -1286,8 +1291,8 @@
                     const isSelected = selectedProducts.some(p => p.id === item.id);
                     const cardClass = isSelected ? 'product-card selected' : 'product-card';
                     return `
-                        <div class="${cardClass} flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm" data-id="${item.id}" data-name="${item.name}">
-                            <h2 class="product-name text-sm sm:text-lg font-medium text-gray-800">${item.id}. ${item.name}</h2>
+                        <div class="${cardClass} flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm" data-id="${item.id}" data-name="${item.cleanName}">
+                            <h2 class="product-name text-sm sm:text-lg font-medium text-gray-800">${item.id}. ${item.cleanName}</h2>
                         </div>
                     `;
                 }).join('');
@@ -1331,8 +1336,8 @@
                     const isSelected = selectedProducts.some(p => p.id === item.id);
                     const cardClass = isSelected ? 'product-card selected' : 'product-card';
                     return `
-                        <div class="${cardClass} flex flex-col items-start w-full bg-gray-50 p-4 rounded-lg shadow-sm" data-id="${item.id}" data-name="${item.name}">
-                            <h2 class="product-name text-sm sm:text-lg font-medium text-gray-800">${item.name}</h2>
+                        <div class="${cardClass} flex flex-col items-start w-full bg-gray-50 p-4 rounded-lg shadow-sm" data-id="${item.id}" data-name="${item.cleanName}">
+                            <h2 class="product-name text-sm sm:text-lg font-medium text-gray-800">${item.cleanName}</h2>
                             <p class="text-xs text-purple-700 font-semibold mt-1">${item.company}</p>
                         </div>
                     `;
@@ -1362,7 +1367,14 @@
                         if (existingProductIndex !== -1) {
                             selectedProducts[existingProductIndex].quantity = quantity;
                         } else {
-                            selectedProducts.push({ id: currentProduct.id, name: currentProduct.name, quantity: quantity, unit: currentProduct.unit });
+                            const originalProduct = products.find(p => p.id === currentProduct.id);
+                            selectedProducts.push({ 
+                                id: currentProduct.id, 
+                                name: originalProduct.name, // Almacenar nombre original para exportar
+                                cleanName: originalProduct.cleanName, // Almacenar nombre limpio para UI
+                                quantity: quantity, 
+                                unit: currentProduct.unit 
+                            });
                         }
                     }
                     
@@ -1426,7 +1438,7 @@
             const ws = XLSX.utils.aoa_to_sheet([]);
             ws['!cols'] = [{ width: 52 }, { width: 23 }, { width: 23 }, { width: 23 }, { width: 15 }, { width: 15 }];
 
-            let orderTitle = 'FERIA DE RUIZ PINEDA';
+            let orderTitle = 'FERIA RUIZ PINEDA';
             if (filters.polar) {
                 orderTitle = 'PEDIDO DE LA POLAR';
             } else if (filters.panes) {
@@ -1439,7 +1451,7 @@
 
             XLSX.utils.sheet_add_aoa(ws, [[orderTitle]], { origin: 'C1' });
             XLSX.utils.sheet_add_aoa(ws, infoHeaders, { origin: 'A1' });
-            XLSX.utils.sheet_add_aoa(ws, [['PRODUCTO', 'PEDIDO FERIA DE RUIZ PINEDA', 'PEDIDO FERIA CENTRO', 'PEDIDO FERIA RUIZ PINEDA', 'TOTAL', 'UNIDAD']], { origin: 'A3' });
+            XLSX.utils.sheet_add_aoa(ws, [['PRODUCTO', 'PEDIDO FERIA RUIZPINEDA', 'PEDIDO FERIA ESTE', 'PEDIDO FERIA CENTRO', 'TOTAL', 'UNIDAD']], { origin: 'A3' });
 
             const productData = productsToExport.map(product => {
                 let quantityText = '';
@@ -1486,17 +1498,17 @@
 
             const wb = XLSX.utils.book_new();
             
-            let sheetName = "PEDIDO DE FERIA DE RUIZ PINEDA";
+            let sheetName = "PEDIDO DE FERIA RUIZPINEDA";
             if (filters.polar) sheetName = "Pedido De La Polar";
             else if (filters.panes) sheetName = "Pedido De La Cava";
             else if (filters.selected) sheetName = "Productos Seleccionados";
 
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
             
-            let fileName = `Pedido de Feria de Ruiz Pineda ${day}-${month}-${year}.xlsx`;
-            if (filters.polar) fileName = `Pedido De La Polar Feria de Ruiz Pineda ${day}-${month}-${year}.xlsx`;
-            else if (filters.panes) fileName = `Pedido De La Cava Feria De Ruiz Pineda ${day}-${month}-${year}.xlsx`;
-            else if (filters.selected) fileName = `Productos Seleccionados Feria De Ruiz Pineda ${day}-${month}-${year}.xlsx`;
+            let fileName = `Pedido de Feria RuizPineda ${day}-${month}-${year}.xlsx`;
+            if (filters.polar) fileName = `Pedido De La Polar Feria RuizPineda ${day}-${month}-${year}.xlsx`;
+            else if (filters.panes) fileName = `Pedido De La Cava Feria RuizPineda ${day}-${month}-${year}.xlsx`;
+            else if (filters.selected) fileName = `Productos Seleccionados Feria RuizPineda ${day}-${month}-${year}.xlsx`;
 
 
             XLSX.writeFile(wb, fileName);
@@ -1520,11 +1532,11 @@
 
             const responsablesString = responsables.filter(r => r).join('-');
             // Fila 1: Fecha en A1, B1 vacía, Título en C1
-            data.push([`FECHA:${dateStringForHeader}`, null, 'PEDIDO DIRECTO FERIA DE RUIZ PINEDA']);
+            data.push([`FECHA:${dateStringForHeader}`, null, 'PEDIDO DIRECTO FERIA RUIZPINEDA']);
             // Fila 2: Responsable en A2
             data.push(['RESPONSABLE: ' + responsablesString]);
             // Fila 3: Encabezados de columna
-            data.push(['PRODUCTO', 'FERIA DE RUIZ PINEDA', 'FERIA DEL CENTRO', 'FERIA DE RUIZ PINEDA', 'TOTAL', 'UNIDAD']);
+            data.push(['PRODUCTO', 'FERIA RUIZ PINEDA', 'FERIA DEL ESTE', 'FERIA DE CENTRO', 'TOTAL', 'UNIDAD']);
 
             const companyNames = Object.keys(companyProductMapping).sort();
 
@@ -1553,8 +1565,8 @@
                             data.push([
                                 `${product.id}. ${productNameForExport}`,
                                 quantityWithUnit,
-                                '', // FERIA DEL CENTRO
                                 '', // FERIA DE RUIZ PINEDA
+                                '', // FERIA DE CENTRO
                                 '',  // Placeholder para la fórmula de TOTAL
                                 product.unit.toUpperCase() // UNIDAD en columna F (en mayúsculas)
                             ]);
@@ -1590,9 +1602,9 @@
             ws['!merges'].push({ s: { r: 0, c: 2 }, e: { r: 0, c: 5 } });
 
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "PEDIDO DIRECTO FERIA DE RUIZ PINEDA");
+            XLSX.utils.book_append_sheet(wb, ws, "PEDIDO DIRECTO FERIA ");
             
-            XLSX.writeFile(wb, `PEDIDO_DIRECTO_FERIA_DE_RUIZ_PINEDA_${dateStringForFile}.xlsx`);
+            XLSX.writeFile(wb, `PEDIDO_DIRECTO_FERIA_RUIZPINEDA_${dateStringForFile}.xlsx`);
             showMessage('Pedido Directo exportado con éxito.', '#86efac', '#166534');
         }
         
@@ -1622,7 +1634,7 @@
                     Pedido de Viveres
                 </div>
                 <div class="text-xs text-gray-600 mb-1 text-center">
-                    <span>${dateString}</span> | <span>FERIA DE RUIZ PINEDA</span>
+                    <span>${dateString}</span> | <span>FERIA CENTRO</span>
                 </div>
                 ${responsablesString ? `<div class="text-xs text-gray-600 mb-3 text-center"><span class="font-bold">RESPONSABLES:</span> ${responsablesString}</div>` : '<div class="mb-2"></div>'}
                 <div id="captureList" class="flex flex-col gap-2"></div>
@@ -1641,7 +1653,7 @@
                 const item = document.createElement('div');
                 item.classList.add('bg-blue-50', 'p-3', 'rounded-lg', 'flex', 'justify-between', 'items-center', 'text-sm');
                 item.innerHTML = `
-                    <span class="font-medium text-blue-800">${product.name}</span>
+                    <span class="font-medium text-blue-800">${product.cleanName}</span>
                     <span class="font-bold text-blue-900">${product.quantity} ${product.unit}</span>
                 `;
                 captureList.appendChild(item);
@@ -2157,4 +2169,10 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
 
