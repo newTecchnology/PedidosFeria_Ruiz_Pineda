@@ -1604,7 +1604,7 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "PEDIDO DIRECTO FERIA ");
             
-            XLSX.writeFile(wb, `PEDIDO_DIRECTO_FERIA_RUIZPINEDA_${dateStringForFile}.xlsx`);
+            XLSX.writeFile(wb, `PEDIDO_DIRECTO_FERIA_RUIZ_PINEDA_${dateStringForFile}.xlsx`);
             showMessage('Pedido Directo exportado con éxito.', '#86efac', '#166534');
         }
         
@@ -1634,7 +1634,7 @@
                     Pedido de Viveres
                 </div>
                 <div class="text-xs text-gray-600 mb-1 text-center">
-                    <span>${dateString}</span> | <span>FERIA CENTRO</span>
+                    <span>${dateString}</span> | <span>FERIA RUIZ PINEDA</span>
                 </div>
                 ${responsablesString ? `<div class="text-xs text-gray-600 mb-3 text-center"><span class="font-bold">RESPONSABLES:</span> ${responsablesString}</div>` : '<div class="mb-2"></div>'}
                 <div id="captureList" class="flex flex-col gap-2"></div>
